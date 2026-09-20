@@ -1,0 +1,12 @@
+id = "spring-suite"
+name = "Spring Suite (Maven & Spring Boot)"
+schema_version = 1
+version = "0.0.1"
+authors = ["Pengfei Li"]
+description = "Maven pom.xml & Spring Boot support for Zed: XML syntax highlighting, outline and brackets (LemMinX + Spring Boot language server integration planned)."
+repository = "https://github.com/pengfei-li/zed-spring-suite"
+
+[grammars.xml]
+repository = "https://github.com/tree-sitter-grammars/tree-sitter-xml"
+commit = "5000ae8f22d11fbe93939b05c1e37cf21117162d"
+path = "xml"
