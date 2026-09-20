@@ -11,7 +11,7 @@ const LEMMINX_JAR: &str = "org.eclipse.lemminx-uber.jar";
 const MAVEN_EXT_DIR: &str = "maven-ext";
 const MAVEN_EXT_JAR_HINT: &str = "lemminx-maven";
 
-const GITHUB_REPO: &str = "pengfei-li/zed-spring-boot";
+const GITHUB_REPO: &str = "weirdo-adam/zed-spring-boot";
 
 struct SpringBootExtension {
     cached_server_path: Option<String>,
