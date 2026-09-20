@@ -45,20 +45,6 @@ Requires JDK 17+. `java` resolution: worktree PATH → `ZED_JAVA_HOME` →
 hand-managed dir (`org.eclipse.lemminx-uber.jar` + `maven-ext/`) to bypass
 release downloads.
 
-## Development
-
-- `patches/` — LemMinX is built from the 0.31.2 tag with
-  `lemminx-resolve-null.patch` (`completionItem/resolve` must not return
-  `null`; Zed cannot deserialize it, and the fix also enables
-  `additionalTextEdits` for dependency completion).
-- `.github/workflows/release-servers.yml` — packages and publishes the jars.
-- `scripts/smoke.py` — LSP smoke test over the packaged jars:
-
-  ```sh
-  python3 scripts/smoke.py --java <java> \
-    --lemminx-jar <lemminx-uber.jar> --ext-zip <lemminx-maven-deps.zip>
-  ```
-
 ## License
 
 MIT
@@ -107,20 +93,6 @@ MIT
 `JAVA_HOME` → 常见 Homebrew/JVM 安装路径。也可设置 `ZED_LEMMINX_HOME`
 指向手工准备的目录(`org.eclipse.lemminx-uber.jar` + `maven-ext/`)跳过
 Release 下载。
-
-## 开发
-
-- `patches/` — LemMinX 基于 0.31.2 tag 应用
-  `lemminx-resolve-null.patch` 构建(`completionItem/resolve` 不能返回
-  `null`,Zed 无法反序列化;修复同时恢复了依赖补全的
-  `additionalTextEdits` 能力)。
-- `.github/workflows/release-servers.yml` — 打包并发布服务器 jar。
-- `scripts/smoke.py` — 对发布产物做 LSP 冒烟测试:
-
-  ```sh
-  python3 scripts/smoke.py --java <java路径> \
-    --lemminx-jar <lemminx-uber.jar> --ext-zip <lemminx-maven-deps.zip>
-  ```
 
 ## 许可证
 
