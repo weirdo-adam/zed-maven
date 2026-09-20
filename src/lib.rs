@@ -110,6 +110,10 @@ impl SpringBootExtension {
             if fs::metadata(SERVER_DIR).map_or(false, |s| !s.is_dir()) {
                 let _ = fs::remove_file(SERVER_DIR);
             }
+            // download_file(Uncompressed) does not create parent directories;
+            // create the server dir ourselves before any download.
+            fs::create_dir_all(SERVER_DIR)
+                .map_err(|e| format!("failed to create {SERVER_DIR}: {e}"))?;
 
             let uber = release
                 .assets
