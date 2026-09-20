@@ -47,7 +47,7 @@ jobs:
           # instead of returning null (Zed fails to deserialize null).
           git clone --depth 1 --branch 0.31.2 https://github.com/eclipse-lemminx/lemminx
           ( cd lemminx
-            git apply ../patches/lemminx-resolve-null.patch
+            git apply --ignore-whitespace ../patches/lemminx-resolve-null.patch
             mvn -B -q -DskipTests -Dcbi.jarsigner.skip=true package )
           cp lemminx/org.eclipse.lemminx/target/org.eclipse.lemminx-uber.jar lemminx-uber.jar
           ls -la lemminx-uber.jar

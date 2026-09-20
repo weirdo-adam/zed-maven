@@ -3,59 +3,46 @@
 [Maven](https://maven.apache.org) `pom.xml` intelligence for the
 [Zed editor](https://zed.dev).
 
-> Original research notes (including the Spring Boot scope that was later
-> dropped): see [PLAN.md](./PLAN.md).
+## Features
 
-## What it does
+Runs [LemMinX](https://github.com/eclipse-lemminx/lemminx) with
+[lemminx-maven](https://github.com/eclipse-lemminx/lemminx-maven) on `pom.xml`:
 
-Attaches a LemMinX-based language server (with the
-[lemminx-maven](https://github.com/eclipse-lemminx/lemminx-maven) extension) to
-the `XML` language:
+- Schema-aware validation & completion (Maven XSD)
+- Dependency completion: `<groupId>` / `<artifactId>` (with
+  `group:artifact:version` labels, auto-fills sibling tags) / `<version>`
+- Hover details on dependencies
 
-- **Schema-aware validation & completion** for `pom.xml` (Maven XSD):
-  unknown elements, wrong nesting and invalid values are flagged; element
-  completion lists the legal children at the cursor.
-- **Dependency completion** inside `<dependency>` blocks:
-  - `<groupId>` — group ids from your local `~/.m2` repository
-  - `<artifactId>` — artifacts with full `group:artifact:version` labels;
-    accepting one auto-fills the surrounding `<groupId>`/`<version>` tags
-  - `<version>` — versions available for the artifact
-- **Hover** on dependencies for artifact details.
-
-Syntax highlighting, outline and indentation are provided by the official
-[`xml`](https://github.com/sweetppro/zed-xml) extension — install it alongside.
+Syntax highlighting comes from the official `xml` extension — install it too.
 
 ## Install (development)
 
 1. Install the `xml` extension from Zed's extension page.
-2. Command palette → `zed: install dev extension` → select this directory.
-3. Open a Maven project's `pom.xml`.
+2. `zed: install dev extension` → select this directory.
+3. Open a Maven project's `pom.xml`. Server jars (~19 MB) download
+   automatically from [releases](https://github.com/weirdo-adam/zed-maven/releases)
+   on first start.
 
-On first start the extension downloads the server jars automatically from this
-repository's [releases](https://github.com/weirdo-adam/zed-maven/releases)
-(built by the `release-servers` workflow):
+Requires JDK 17+. `java` resolution: worktree PATH → `ZED_JAVA_HOME` →
+`JAVA_HOME` → common Homebrew/JVM paths. `ZED_LEMMINX_HOME` can point at a
+hand-managed dir (`org.eclipse.lemminx-uber.jar` + `maven-ext/`) to bypass
+release downloads.
 
-- `lemminx-uber.jar` — LemMinX 0.31.2, patched with
-  [`patches/lemminx-resolve-null.patch`](./patches/lemminx-resolve-null.patch)
-  so `completionItem/resolve` returns the item instead of `null`
-  (Zed cannot deserialize `null`; upstream items without `data` triggered this).
-- `lemminx-maven-deps.zip` — lemminx-maven + its dependency jars.
+## Development
 
-`ZED_LEMMINX_HOME` can point at a hand-managed directory containing
-`org.eclipse.lemminx-uber.jar` + `maven-ext/` to bypass the release download.
+- `patches/` — LemMinX is built from the 0.31.2 tag with
+  `lemminx-resolve-null.patch` (`completionItem/resolve` must not return
+  `null`; Zed cannot deserialize it, and the fix unlocks
+  `additionalTextEdits` for dependency completion).
+- `.github/workflows/release-servers.yml` — packages and publishes the jars.
+- `scripts/smoke.py` — LSP smoke test over the packaged jars:
 
-Requirements: JDK 17+. `java` is resolved via worktree PATH → `ZED_JAVA_HOME`
-→ `JAVA_HOME` → common Homebrew/JVM locations.
+  ```sh
+  python3 scripts/smoke.py --java <java> \
+    --lemminx-jar <lemminx-uber.jar> --ext-zip <lemminx-maven-deps.zip>
+  ```
 
-## Smoke testing
-
-```sh
-python3 scripts/smoke.py --java <java-bin> \
-  --lemminx-jar <lemminx-uber.jar> --ext-zip <lemminx-maven-deps.zip>
-```
-
-Validates: server starts, Maven extension activates, `groupId`/`artifactId`
-completion returns items, `completionItem/resolve` returns the item.
+Research notes and original roadmap: [docs/PLAN.md](./docs/PLAN.md).
 
 ## License
 
