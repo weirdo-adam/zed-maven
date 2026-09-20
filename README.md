@@ -19,7 +19,7 @@ Runs [LemMinX](https://github.com/eclipse-lemminx/lemminx) with
   `group:artifact:version` labels, auto-fills sibling tags) / `<version>`
 - Hover details on dependencies
 
-Syntax highlighting comes from the official `xml` extension — install it too.
+Syntax highlighting is provided by the official `xml` extension; install it alongside.
 
 ## Install (development)
 
@@ -38,7 +38,7 @@ release downloads.
 
 - `patches/` — LemMinX is built from the 0.31.2 tag with
   `lemminx-resolve-null.patch` (`completionItem/resolve` must not return
-  `null`; Zed cannot deserialize it, and the fix unlocks
+  `null`; Zed cannot deserialize it, and the fix also enables
   `additionalTextEdits` for dependency completion).
 - `.github/workflows/release-servers.yml` — packages and publishes the jars.
 - `scripts/smoke.py` — LSP smoke test over the packaged jars:
@@ -66,9 +66,9 @@ MIT
 在 `pom.xml` 上运行 [LemMinX](https://github.com/eclipse-lemminx/lemminx)
 (含 [lemminx-maven](https://github.com/eclipse-lemminx/lemminx-maven) 扩展):
 
-- 基于 Maven XSD 的校验与标签补全(非法标签/嵌套实时标红)
+- 基于 Maven XSD 的校验与标签补全(对非法标签与错误嵌合即时报告诊断)
 - 依赖补全:`<groupId>` / `<artifactId>`(带
-  `group:artifact:version` 完整坐标,选中后自动补出同级标签)/ `<version>`
+  `group:artifact:version` 完整坐标,选中后自动填充同级标签)/ `<version>`
 - 依赖项悬停详情(hover)
 
 语法高亮由官方 `xml` 扩展提供——请一并安装。
@@ -88,9 +88,9 @@ Release 下载。
 
 ## 开发
 
-- `patches/` — LemMinX 基于 0.31.2 tag 打
+- `patches/` — LemMinX 基于 0.31.2 tag 应用
   `lemminx-resolve-null.patch` 构建(`completionItem/resolve` 不能返回
-  `null`,Zed 无法反序列化;修复同时解锁依赖补全的
+  `null`,Zed 无法反序列化;修复同时恢复了依赖补全的
   `additionalTextEdits` 能力)。
 - `.github/workflows/release-servers.yml` — 打包并发布服务器 jar。
 - `scripts/smoke.py` — 对发布产物做 LSP 冒烟测试:

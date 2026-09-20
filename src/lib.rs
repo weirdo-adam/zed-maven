@@ -115,13 +115,13 @@ impl MavenExtension {
                 &LanguageServerInstallationStatus::Downloading,
             );
 
-            // A previous buggy download (pre-0.0.2) wrote a FILE named
-            // SERVER_DIR; clean it up so the directory can be created.
+            // Versions before 0.0.2 wrote a file named SERVER_DIR instead of
+            // a directory; remove it so the directory can be created.
             if fs::metadata(SERVER_DIR).map_or(false, |s| !s.is_dir()) {
                 let _ = fs::remove_file(SERVER_DIR);
             }
-            // download_file(Uncompressed) does not create parent directories;
-            // create the server dir ourselves before any download.
+            // download_file(Uncompressed) does not create parent directories,
+            // so create the server directory before downloading.
             fs::create_dir_all(SERVER_DIR)
                 .map_err(|e| format!("failed to create {SERVER_DIR}: {e}"))?;
 
