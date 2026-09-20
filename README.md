@@ -29,8 +29,19 @@ Runs [LemMinX](https://github.com/eclipse-lemminx/lemminx) with
 | Go-to-definition for properties | ✅ | |
 | XML formatting | ✅ | LemMinX built-in |
 | Maven Central remote search | ⚠️ | optional, network-dependent |
+| Dependency tree | ✅ | via a Zed task, see below |
 
 Syntax highlighting is provided by the official `xml` extension; install it alongside.
+
+### Dependency tree (task)
+
+Add to your project's `.zed/tasks.json` and run it via `task: spawn`:
+
+```json
+[
+  { "label": "maven: dependency tree", "command": "mvn dependency:tree -B", "reveal": "always" }
+]
+```
 
 ## Install (development)
 
@@ -78,8 +89,19 @@ MIT
 | 属性跳转定义 | ✅ | |
 | XML 格式化 | ✅ | LemMinX 内置 |
 | Maven Central 远程搜索 | ⚠️ | 可选,依赖网络 |
+| 依赖树 | ✅ | 通过 Zed 任务,见下文 |
 
 语法高亮由官方 `xml` 扩展提供;请一并安装。
+
+### 依赖树(任务)
+
+添加到项目 `.zed/tasks.json`,通过 `task: spawn` 运行:
+
+```json
+[
+  { "label": "maven: 依赖树", "command": "mvn dependency:tree -B", "reveal": "always" }
+]
+```
 
 ## 安装(开发模式)
 
