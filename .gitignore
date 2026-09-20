@@ -3,3 +3,4 @@
 extension.wasm
 __pycache__/
 *.pyc
+docs/

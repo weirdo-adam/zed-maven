@@ -48,8 +48,6 @@ release downloads.
     --lemminx-jar <lemminx-uber.jar> --ext-zip <lemminx-maven-deps.zip>
   ```
 
-Research notes and original roadmap: [docs/PLAN.md](./docs/PLAN.md).
-
 ## License
 
 MIT
@@ -101,8 +99,6 @@ Release 下载。
   python3 scripts/smoke.py --java <java路径> \
     --lemminx-jar <lemminx-uber.jar> --ext-zip <lemminx-maven-deps.zip>
   ```
-
-调研笔记与最初规划:[docs/PLAN.md](./docs/PLAN.md)。
 
 ## 许可证
 
