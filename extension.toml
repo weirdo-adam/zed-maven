@@ -1,7 +1,7 @@
 id = "spring-boot"
 name = "Spring Boot & Maven"
 schema_version = 1
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Pengfei Li"]
 description = "Maven pom.xml & Spring Boot intelligence for Zed: LemMinX (schema-aware completion/validation) with lemminx-maven (dependency completion), plus the Spring Boot language server. Syntax highlighting is provided by the separate `xml` extension."
 repository = "https://github.com/weirdo-adam/zed-spring-boot"

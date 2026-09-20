@@ -105,36 +105,38 @@ impl SpringBootExtension {
                 &LanguageServerInstallationStatus::Downloading,
             );
 
+            // A previous buggy download (pre-0.0.2) wrote a FILE named
+            // SERVER_DIR; clean it up so the directory can be created.
+            if fs::metadata(SERVER_DIR).map_or(false, |s| !s.is_dir()) {
+                let _ = fs::remove_file(SERVER_DIR);
+            }
+
             let uber = release
                 .assets
                 .iter()
                 .find(|a| a.name == "lemminx-uber.jar")
                 .ok_or("release is missing the `lemminx-uber.jar` asset")?;
-            download_file(&uber.download_url, SERVER_DIR, zed::DownloadedFileType::Uncompressed)
-                .map_err(|e| format!("failed to download LemMinX: {e}"))?;
+            // Uncompressed: `file_path` is the destination file path.
+            download_file(
+                &uber.download_url,
+                &format!("{SERVER_DIR}/{LEMMINX_JAR}"),
+                zed::DownloadedFileType::Uncompressed,
+            )
+            .map_err(|e| format!("failed to download LemMinX: {e}"))?;
 
             let maven = release
                 .assets
                 .iter()
                 .find(|a| a.name == "lemminx-maven-deps.zip")
                 .ok_or("release is missing the `lemminx-maven-deps.zip` asset")?;
-            download_file(&maven.download_url, SERVER_DIR, zed::DownloadedFileType::Zip)
-                .map_err(|e| format!("failed to download lemminx-maven: {e}"))?;
-
-            // The zip contains dependency jars at its root; gather them into
-            // `maven-ext/` so the classpath wildcard picks them up.
-            let ext_dir = format!("{SERVER_DIR}/{MAVEN_EXT_DIR}");
-            fs::create_dir_all(&ext_dir)
-                .map_err(|e| format!("failed to create {ext_dir}: {e}"))?;
-            if let Ok(entries) = fs::read_dir(SERVER_DIR) {
-                for entry in entries.flatten() {
-                    let name = entry.file_name().to_string_lossy().to_string();
-                    if name.ends_with(".jar") && name != LEMMINX_JAR {
-                        fs::rename(entry.path(), format!("{ext_dir}/{name}"))
-                            .map_err(|e| format!("failed to move {name}: {e}"))?;
-                    }
-                }
-            }
+            // Zip: `file_path` is the directory the archive is extracted into.
+            // The zip holds lemminx-maven + its dependency jars at its root.
+            download_file(
+                &maven.download_url,
+                &format!("{SERVER_DIR}/{MAVEN_EXT_DIR}"),
+                zed::DownloadedFileType::Zip,
+            )
+            .map_err(|e| format!("failed to download lemminx-maven: {e}"))?
         }
 
         if !server_files_present(&managed) {
