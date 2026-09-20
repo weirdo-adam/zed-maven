@@ -1,7 +1,7 @@
 id = "maven"
 name = "Maven"
 schema_version = 1
-version = "0.0.5"
+version = "0.0.1"
 authors = ["weirdo-adam <adam.ngc2237@gmail.com>"]
 description = "Maven pom.xml intelligence for Zed: schema-aware completion and validation (LemMinX) plus dependency groupId/artifactId/version completion and hover (lemminx-maven). Syntax highlighting is provided by the separate `xml` extension."
 repository = "https://github.com/weirdo-adam/zed-maven"
