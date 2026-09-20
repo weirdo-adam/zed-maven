@@ -68,7 +68,6 @@ jobs:
           unzip -l lemminx-maven-deps.zip | tail -3
 
       - name: Smoke test the packaged servers
-        continue-on-error: true
         run: |
           python3 scripts/smoke.py \
             --java java \
