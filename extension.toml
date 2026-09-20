@@ -3,10 +3,15 @@ name = "Spring Suite (Maven & Spring Boot)"
 schema_version = 1
 version = "0.0.1"
 authors = ["Pengfei Li"]
-description = "Maven pom.xml & Spring Boot support for Zed: XML syntax highlighting, outline and brackets (LemMinX + Spring Boot language server integration planned)."
+description = "Maven pom.xml & Spring Boot intelligence for Zed: LemMinX (schema-aware completion/validation) with lemminx-maven (dependency completion), plus the Spring Boot language server. Syntax highlighting is provided by the separate `xml` extension."
 repository = "https://github.com/pengfei-li/zed-spring-suite"
 
-[grammars.xml]
-repository = "https://github.com/tree-sitter-grammars/tree-sitter-xml"
-commit = "5000ae8f22d11fbe93939b05c1e37cf21117162d"
-path = "xml"
+# NOTE: XML syntax highlighting/outline is intentionally NOT provided here.
+# Install the `xml` extension (https://github.com/sweetppro/zed-xml); this
+# extension attaches its language servers to that "XML" language.
+#
+# [grammars.xml]  -> removed, see git history (M0 prototype)
+
+[language_servers.lemminx-maven]
+name = "LemMinX Maven"
+languages = ["XML"]

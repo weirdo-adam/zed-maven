@@ -1,33 +1,32 @@
 # zed-spring-suite
 
-Maven & Spring Boot support for the [Zed editor](https://zed.dev): one extension
-covering XML syntax, Maven `pom.xml` intelligence, and (planned) Spring Boot
-language-server integration.
+Maven & Spring Boot intelligence for the [Zed editor](https://zed.dev).
 
 > Roadmap and research notes: see [PLAN.md](./PLAN.md).
 
-## Status
+## Relationship to the `xml` extension
 
-- [x] **M0 — XML language**: syntax highlighting, outline (structural elements
-      only), bracket matching & rainbow control, auto-indent, tag auto-close,
-      comment toggling (`<!-- -->`) for `.xml`, `.xsd`, `.xsl`, `.xslt`,
-      `.xhtml`, `.wsdl`, `.svg` — including `pom.xml`, `settings.xml`, etc.
-- [ ] **M1 — LemMinX language server**: schema-aware completion & validation
-      for `pom.xml` (Maven XSD).
-- [ ] **M2 — lemminx-maven**: dependency `groupId/artifactId/version`
-      completion (local `~/.m2` + Maven Central), hover info.
-- [ ] **M3 — spring-boot-language-server**: `application.properties`/`.yml`
-      completion & validation, Spring Java support.
-- [ ] **M4 — Snippets & runnables**: pom skeletons, `@SpringBootApplication`
-      run button, task templates.
+Syntax highlighting, outline and indentation for XML are provided by the
+official [`xml`](https://github.com/sweetppro/zed-xml) extension — this
+extension **does not duplicate** that. Instead, `spring-suite` attaches
+language servers on top of the `XML` language:
+
+| Capability | Extension | Status |
+|---|---|---|
+| XML syntax / outline / indent | `xml` (install separately) | ✅ available |
+| Schema-aware completion & validation for `pom.xml` (LemMinX) | **spring-suite** | 🚧 M1 |
+| Dependency `groupId/artifactId/version` completion (lemminx-maven) | **spring-suite** | 🚧 M2 |
+| `application.properties`/`.yml` intelligence (spring-boot-language-server) | **spring-suite** | 🚧 M3 |
+| Snippets & `@SpringBootApplication` runnables | **spring-suite** | 🚧 M4 |
+
+`contrib/upstream-zed-xml/` holds extra/validated queries (e.g.
+`brackets.scm`) intended to be contributed upstream.
 
 ## Install (development)
 
-1. Open Zed → command palette → `zed: install dev extension`
-   (Extensions page → *Install Dev Extension*)
-2. Select this repository's root directory.
-3. Open [`testdata/pom.xml`](./testdata/pom.xml) to verify highlighting,
-   outline (`cmd-shift-o` / outline panel), folding and auto-indent.
+1. Install the `xml` extension from Zed's extension page.
+2. Command palette → `zed: install dev extension` → select this directory.
+3. Open [`testdata/pom.xml`](./testdata/pom.xml).
 
 ## License
 
