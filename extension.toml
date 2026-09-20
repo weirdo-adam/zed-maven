@@ -3,7 +3,7 @@ name = "Maven"
 schema_version = 1
 version = "0.0.1"
 authors = ["weirdo-adam <adam.ngc2237@gmail.com>"]
-description = "Maven pom.xml intelligence: schema-aware validation and completion, dependency groupId/artifactId/version completion, hover details."
+description = "Maven pom.xml support: schema validation and dependency completion."
 repository = "https://github.com/weirdo-adam/zed-maven"
 
 # NOTE: XML syntax highlighting/outline is intentionally NOT provided here.
