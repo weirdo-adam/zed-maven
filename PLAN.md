@@ -1,5 +1,9 @@
 # Zed 编辑器 Maven / Spring Boot 支持插件 —— 分析与实施计划
 
+> **Scope update (2026-09-20):** the shipped extension now focuses on Maven
+> only (`maven` / zed-maven). The Spring Boot phases (M3+) below are kept as
+> research notes for a possible separate extension.
+
 > 目标:在 Zed 中获得接近 IDEA 的 pom.xml 编辑体验与 Spring Boot 开发支持。
 > 调研环境:Zed 1.20.2 / macOS / JDK 21(jenv)/ Node 24
 > 调研日期:2026-09

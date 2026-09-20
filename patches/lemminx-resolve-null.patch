@@ -1,0 +1,13 @@
+diff --git a/org.eclipse.lemminx/src/main/java/org/eclipse/lemminx/XMLTextDocumentService.java b/org.eclipse.lemminx/src/main/java/org/eclipse/lemminx/XMLTextDocumentService.java
+index 9f2ecf9..54856a0 100644
+--- a/org.eclipse.lemminx/src/main/java/org/eclipse/lemminx/XMLTextDocumentService.java
++++ b/org.eclipse.lemminx/src/main/java/org/eclipse/lemminx/XMLTextDocumentService.java
+@@ -272,7 +272,7 @@ public class XMLTextDocumentService implements TextDocumentService {
+ 		return computeDOMAsync(unresolved.getData(), (xmlDocument, cancelChecker) -> {
+ 			return getXMLLanguageService().resolveCompletionItem(unresolved, xmlDocument, sharedSettings,
+ 					cancelChecker);
+-		});
++		}).thenApply(resolved -> resolved != null ? resolved : unresolved);
+ 	}
+ 
+ 	@Override

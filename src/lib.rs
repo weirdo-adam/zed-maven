@@ -7,17 +7,21 @@ use zed_extension_api::{
 };
 
 const SERVER_DIR: &str = "lemminx-maven-server";
+/// Bumped whenever the release contents change, so already-downloaded copies
+/// are refreshed instead of reused.
+const SERVER_VERSION: &str = "2";
+const VERSION_FILE: &str = "server-version";
 const LEMMINX_JAR: &str = "org.eclipse.lemminx-uber.jar";
 const MAVEN_EXT_DIR: &str = "maven-ext";
 const MAVEN_EXT_JAR_HINT: &str = "lemminx-maven";
 
-const GITHUB_REPO: &str = "weirdo-adam/zed-spring-boot";
+const GITHUB_REPO: &str = "weirdo-adam/zed-maven";
 
-struct SpringBootExtension {
+struct MavenExtension {
     cached_server_path: Option<String>,
 }
 
-impl zed::Extension for SpringBootExtension {
+impl zed::Extension for MavenExtension {
     fn new() -> Self {
         Self {
             cached_server_path: None,
@@ -48,7 +52,7 @@ impl zed::Extension for SpringBootExtension {
     }
 }
 
-impl SpringBootExtension {
+impl MavenExtension {
     /// Returns the directory that contains `org.eclipse.lemminx-uber.jar`
     /// and the `maven-ext/` dependency directory.
     ///
@@ -83,7 +87,10 @@ impl SpringBootExtension {
 
         // 2/3. Managed install under the extension's working directory
         let managed = SERVER_DIR.to_string();
-        if !server_files_present(&managed) {
+        let up_to_date = server_files_present(&managed)
+            && fs::read_to_string(format!("{managed}/{VERSION_FILE}"))
+                .map_or(false, |v| v.trim() == SERVER_VERSION);
+        if !up_to_date {
             set_language_server_installation_status(
                 language_server_id,
                 &LanguageServerInstallationStatus::CheckingForUpdate,
@@ -130,6 +137,9 @@ impl SpringBootExtension {
                 zed::DownloadedFileType::Uncompressed,
             )
             .map_err(|e| format!("failed to download LemMinX: {e}"))?;
+
+            fs::write(format!("{SERVER_DIR}/{VERSION_FILE}"), SERVER_VERSION)
+                .map_err(|e| format!("failed to write version marker: {e}"))?;
 
             let maven = release
                 .assets
@@ -252,4 +262,4 @@ fn jvms_from(root: &str) -> Vec<String> {
     out
 }
 
-zed::register_extension!(SpringBootExtension);
+zed::register_extension!(MavenExtension);

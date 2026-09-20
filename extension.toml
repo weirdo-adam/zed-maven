@@ -1,16 +1,14 @@
-id = "spring-boot"
-name = "Spring Boot & Maven"
+id = "maven"
+name = "Maven"
 schema_version = 1
-version = "0.0.4"
-authors = ["Pengfei Li"]
-description = "Maven pom.xml & Spring Boot intelligence for Zed: LemMinX (schema-aware completion/validation) with lemminx-maven (dependency completion), plus the Spring Boot language server. Syntax highlighting is provided by the separate `xml` extension."
-repository = "https://github.com/weirdo-adam/zed-spring-boot"
+version = "0.0.5"
+authors = ["weirdo-adam <adam.ngc2237@gmail.com>"]
+description = "Maven pom.xml intelligence for Zed: schema-aware completion and validation (LemMinX) plus dependency groupId/artifactId/version completion and hover (lemminx-maven). Syntax highlighting is provided by the separate `xml` extension."
+repository = "https://github.com/weirdo-adam/zed-maven"
 
 # NOTE: XML syntax highlighting/outline is intentionally NOT provided here.
 # Install the `xml` extension (https://github.com/sweetppro/zed-xml); this
 # extension attaches its language servers to that "XML" language.
-#
-# [grammars.xml]  -> removed, see git history (M0 prototype)
 
 [language_servers.lemminx-maven]
 name = "LemMinX Maven"

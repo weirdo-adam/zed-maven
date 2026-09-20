@@ -41,10 +41,15 @@ jobs:
           echo "LEMMINX_VERSION=$LEMMINX_VERSION" >>"$GITHUB_ENV"
           echo "LemMinX version: $LEMMINX_VERSION"
 
-      - name: Download LemMinX uber jar
+      - name: Build LemMinX (patched for Zed)
         run: |
-          curl -fsSL -o lemminx-uber.jar \
-            "https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/lemminx/org.eclipse.lemminx/${LEMMINX_VERSION}/org.eclipse.lemminx-${LEMMINX_VERSION}-uber.jar"
+          # Patched: completionItem/resolve falls back to the original item
+          # instead of returning null (Zed fails to deserialize null).
+          git clone --depth 1 --branch 0.31.2 https://github.com/eclipse-lemminx/lemminx
+          ( cd lemminx
+            git apply ../patches/lemminx-resolve-null.patch
+            mvn -B -q -DskipTests -Dcbi.jarsigner.skip=true package )
+          cp lemminx/org.eclipse.lemminx/target/org.eclipse.lemminx-uber.jar lemminx-uber.jar
           ls -la lemminx-uber.jar
 
       - name: Build lemminx-maven
@@ -90,4 +95,4 @@ jobs:
           - LemMinX ${LEMMINX_VERSION} (uber jar, EPL-2.0 — https://github.com/eclipse-lemminx/lemminx)
           - lemminx-maven (built from master, EPL-2.0 — https://github.com/eclipse-lemminx/lemminx-maven)
 
-          Downloaded automatically by the zed-spring-boot extension."
+          Downloaded automatically by the zed-maven extension."
