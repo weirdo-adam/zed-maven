@@ -69,6 +69,9 @@ impl SpringBootExtension {
         // 1. Local override (development / self-managed installs)
         if let Ok(home) = std::env::var("ZED_LEMMINX_HOME") {
             if server_files_present(&home) {
+                let home = fs::canonicalize(&home)
+                    .map(|p| p.to_string_lossy().to_string())
+                    .unwrap_or(home);
                 self.cached_server_path = Some(home.clone());
                 return Ok(home);
             }
@@ -149,6 +152,14 @@ impl SpringBootExtension {
                  {MAVEN_EXT_DIR}/ containing {MAVEN_EXT_JAR_HINT}*.jar"
             ));
         }
+        // The language-server process does NOT run with the extension's
+        // working directory as its cwd, so relative classpath entries would
+        // not resolve. Convert to an absolute (host) path — the WASM sandbox
+        // exposes real filesystem paths.
+        let managed = match fs::canonicalize(&managed) {
+            Ok(abs) => abs.to_string_lossy().to_string(),
+            Err(_) => managed,
+        };
         self.cached_server_path = Some(managed.clone());
         Ok(managed)
     }
