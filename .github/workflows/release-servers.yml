@@ -1,0 +1,93 @@
+name: release-servers
+
+# Builds/packages the language-server jars and attaches them to a GitHub
+# release. The Zed extension downloads these assets automatically
+# (see src/lib.rs -> server_base_dir).
+#
+# - LemMinX: downloaded as a prebuilt uber jar from Eclipse's releases repo
+# - lemminx-maven: built from source (zip-with-dependencies + main jar)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (default: server-<lemminx-version>)"
+        required: false
+        type: string
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Resolve latest LemMinX version
+        run: |
+          curl -fsSL \
+            https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/lemminx/org.eclipse.lemminx/maven-metadata.xml \
+            -o maven-metadata.xml
+          LEMMINX_VERSION=$(grep -oPm1 '(?<=<release>)[^<]+' maven-metadata.xml)
+          echo "LEMMINX_VERSION=$LEMMINX_VERSION" >>"$GITHUB_ENV"
+          echo "LemMinX version: $LEMMINX_VERSION"
+
+      - name: Download LemMinX uber jar
+        run: |
+          curl -fsSL -o lemminx-uber.jar \
+            "https://repo.eclipse.org/content/repositories/lemminx-releases/org/eclipse/lemminx/org.eclipse.lemminx/${LEMMINX_VERSION}/org.eclipse.lemminx-${LEMMINX_VERSION}-uber.jar"
+          ls -la lemminx-uber.jar
+
+      - name: Build lemminx-maven
+        run: |
+          git clone --depth 1 https://github.com/eclipse-lemminx/lemminx-maven
+          ( cd lemminx-maven && mvn -B -q -DskipTests package )
+          ls -la lemminx-maven/lemminx-maven/target/
+
+      - name: Assemble lemminx-maven-deps.zip
+        run: |
+          mkdir -p ext
+          unzip -q lemminx-maven/lemminx-maven/target/*-zip-with-dependencies.zip -d ext
+          cp lemminx-maven/lemminx-maven/target/lemminx-maven-*.jar ext/
+          rm -f ext/*sources.jar
+          ( cd ext && zip -q -r "$OLDPWD/lemminx-maven-deps.zip" . )
+          unzip -l lemminx-maven-deps.zip | tail -3
+
+      - name: Smoke test the packaged servers
+        continue-on-error: true
+        run: |
+          python3 scripts/smoke.py \
+            --java java \
+            --lemminx-jar lemminx-uber.jar \
+            --ext-zip lemminx-maven-deps.zip
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ inputs.tag }}"
+          if [ -z "$TAG" ]; then
+            TAG="server-${LEMMINX_VERSION}"
+            # avoid clashing with an existing tag of the same name
+            if gh release view "$TAG" >/dev/null 2>&1; then
+              TAG="$TAG-$(date +%Y%m%d%H%M%S)"
+            fi
+          fi
+          gh release create "$TAG" \
+            lemminx-uber.jar lemminx-maven-deps.zip \
+            --title "Language servers: LemMinX ${LEMMINX_VERSION}" \
+            --notes "Automated language-server packaging.
+
+          - LemMinX ${LEMMINX_VERSION} (uber jar, EPL-2.0 — https://github.com/eclipse-lemminx/lemminx)
+          - lemminx-maven (built from master, EPL-2.0 — https://github.com/eclipse-lemminx/lemminx-maven)
+
+          Downloaded automatically by the zed-spring-boot extension."
