@@ -59,14 +59,11 @@ unzip lemminx-maven/lemminx-maven/target/*-zip-with-dependencies.zip -d server/m
 cp lemminx-maven/lemminx-maven/target/lemminx-maven-*.jar server/maven-ext/
 ```
 
-Then launch Zed with the variable set (GUI launches don't inherit your shell
-environment — either start Zed from a terminal or use `launchctl setenv`):
-
-```sh
-ZED_LEMMINX_HOME=$PWD/server zed   # from this repo root
-# or, for GUI launches:
-launchctl setenv ZED_LEMMINX_HOME ~/Developer/github/zed-spring-boot/server
-```
+On first start the extension downloads the jars automatically from this
+repository's [releases](https://github.com/weirdo-adam/zed-spring-boot/releases)
+(built by CI: `release-servers` workflow). No manual setup is required.
+`ZED_LEMMINX_HOME` remains as an escape hatch pointing at a hand-managed
+`server/` directory as laid out above (GUI launches need `launchctl setenv`).
 
 Requirements: JDK 17+ (`brew install openjdk@21`); `java` is resolved via
 worktree PATH → `ZED_JAVA_HOME` → `JAVA_HOME` → common Homebrew/JVM locations.
