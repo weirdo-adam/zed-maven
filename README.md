@@ -9,15 +9,26 @@
 [Maven](https://maven.apache.org) `pom.xml` intelligence for the
 [Zed editor](https://zed.dev).
 
-## Features
+## Feature matrix
 
 Runs [LemMinX](https://github.com/eclipse-lemminx/lemminx) with
 [lemminx-maven](https://github.com/eclipse-lemminx/lemminx-maven) on `pom.xml`:
 
-- Schema-aware validation & completion (Maven XSD)
-- Dependency completion: `<groupId>` / `<artifactId>` (with
-  `group:artifact:version` labels, auto-fills sibling tags) / `<version>`
-- Hover details on dependencies
+| Feature | Status | Notes |
+|---|---|---|
+| Schema validation (Maven XSD) | ✅ | illegal elements/nesting reported as diagnostics |
+| Element & attribute completion | ✅ | schema-aware |
+| Dependency `<groupId>` completion | ✅ | from local `~/.m2` repository |
+| Dependency `<artifactId>` completion | ✅ | `group:artifact:version` labels; auto-fills sibling tags |
+| Dependency `<version>` completion | ✅ | versions available for the artifact |
+| `<scope>` / execution `<phase>` completion | ✅ | enum values |
+| Maven property `${...}` completion | ✅ | properties from the effective model |
+| Hover | ✅ | element docs (XSD) + artifact details |
+| Code actions | ✅ | extract/inline `${property}`, remove managed version, remove id part |
+| Rename Maven property | ✅ | |
+| Go-to-definition for properties | ✅ | |
+| XML formatting | ✅ | LemMinX built-in |
+| Maven Central remote search | ⚠️ | optional, network-dependent |
 
 Syntax highlighting is provided by the official `xml` extension; install it alongside.
 
@@ -61,17 +72,28 @@ MIT
 为 [Zed 编辑器](https://zed.dev)提供 [Maven](https://maven.apache.org)
 `pom.xml` 智能支持。
 
-## 功能
+## 功能矩阵
 
 在 `pom.xml` 上运行 [LemMinX](https://github.com/eclipse-lemminx/lemminx)
 (含 [lemminx-maven](https://github.com/eclipse-lemminx/lemminx-maven) 扩展):
 
-- 基于 Maven XSD 的校验与标签补全(对非法标签与错误嵌合即时报告诊断)
-- 依赖补全:`<groupId>` / `<artifactId>`(带
-  `group:artifact:version` 完整坐标,选中后自动填充同级标签)/ `<version>`
-- 依赖项悬停详情(hover)
+| 功能 | 状态 | 说明 |
+|---|---|---|
+| Schema 校验(Maven XSD) | ✅ | 对非法标签与错误嵌套即时报告诊断 |
+| 标签与属性补全 | ✅ | 基于 schema |
+| 依赖 `<groupId>` 补全 | ✅ | 来源为本地 `~/.m2` 仓库 |
+| 依赖 `<artifactId>` 补全 | ✅ | 带完整坐标;选中后自动填充同级标签 |
+| 依赖 `<version>` 补全 | ✅ | 列出 artifact 可用版本 |
+| `<scope>` / 执行 `<phase>` 补全 | ✅ | 枚举值 |
+| Maven 属性 `${...}` 补全 | ✅ | 基于 effective model 中的属性 |
+| 悬停详情(hover) | ✅ | 标签文档(XSD)+ artifact 信息 |
+| 代码操作(Code Actions) | ✅ | 提取/内联 `${property}`、移除受管版本、移除坐标片段 |
+| Maven 属性重命名 | ✅ | |
+| 属性跳转定义 | ✅ | |
+| XML 格式化 | ✅ | LemMinX 内置 |
+| Maven Central 远程搜索 | ⚠️ | 可选,依赖网络 |
 
-语法高亮由官方 `xml` 扩展提供——请一并安装。
+语法高亮由官方 `xml` 扩展提供;请一并安装。
 
 ## 安装(开发模式)
 
